@@ -1,0 +1,9 @@
+---
+# PostgreSQL vars
+
+postgresql_version: 12
+postgresql_db_name: forgejo
+postgresql_db_user: forgejo
+
+listen_addresses: '*'
+postgresql_network: 192.168.20.0/24

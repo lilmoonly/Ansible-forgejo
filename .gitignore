@@ -1,0 +1,9 @@
+.ssh/
+secrets.yml
+.secrets.yml.swp
+.bash_history
+.bash_logout
+.bashrc
+.profile
+.ansible/
+.gitconfig

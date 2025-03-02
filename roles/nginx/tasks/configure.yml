@@ -1,0 +1,7 @@
+- name: Configure Nginx as a load balancer
+  become: yes
+  template:
+    src: nginx-load-balancer.conf.j2
+    dest: /etc/nginx/sites-available/load-balancer
+  notify:
+    - name: Reload Nginx

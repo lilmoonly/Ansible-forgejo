@@ -1,0 +1,25 @@
+---
+- hosts: db
+  roles:
+    - common
+    - postgresql
+
+  vars_files:
+    - ~/secrets.yml
+
+- hosts: app
+  roles:
+    - common
+    - forgejo
+
+  vars_files:
+    - ~/secrets.yml
+
+- hosts: db
+  tasks:
+    - include_tasks: /home/vagrant/roles/postgresql/tasks/forgejo_admin.yml
+
+- hosts: nginx
+  roles:
+    - common
+    - nginx

@@ -1,0 +1,6 @@
+- name: Enable the load balancer configuration
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/load-balancer
+    dest: /etc/nginx/sites-enabled/load-balancer
+    state: link

@@ -1,0 +1,37 @@
+---
+# default variables for Forgejo installation
+
+forgejo_download: "https://github.com/lilmoonly/Devops-Inteship-Forgejo-Project/releases/download/forgejo-1.0.0/forgejo.zip"
+forgejo_install_dir: "/home/vagrant/forgejo"
+forgejo_archive: "forgejo"
+
+forgejo_config:
+  database:
+    DB_TYPE: postgres
+    HOST: "192.168.20.21:5432"
+    NAME: forgejo
+    USER: forgejo
+    PASSWD: "{{ postgresql_db_password }}"
+    SSL_MODE: disable
+  server:
+    HTTP_PORT: 3000
+    DOMAIN: localhost
+    ROOT_URL: "http://localhost:3000/"
+  repository:
+    ROOT: "/home/vagrant/forgejo/data/forgejo-repositories"
+  lfs:
+    PATH: "/home/vagrant/forgejo/data/lfs"
+  security:
+    INSTALL_LOCK: true
+    SECRET_KEY: "{{ secret_key }}"
+  service:
+    DISABLE_REGISTRATION: true
+    REGISTER_EMAIL_CONFIRM: false
+    ENABLE_NOTIFY_MAIL: false
+    ALLOW_ONLY_EXTERNAL_REGISTRATION: false
+    ENABLE_CAPTCHA: false
+    REQUIRE_SIGNIN_VIEW: false
+    DEFAULT_KEEP_EMAIL_PRIVATE: false
+    DEFAULT_ALLOW_CREATE_ORGANIZATION: true
+    DEFAULT_ENABLE_TIMETRACKING: true
+    NO_REPLY_ADDRESS: noreply.localhost

@@ -1,0 +1,14 @@
+[Unit]
+Description=Forgejo
+After=network.target
+
+[Service]
+User=vagrant
+WorkingDirectory={{ forgejo_install_dir }}
+ExecStart={{ forgejo_install_dir }}/forgejo/gitea web
+Restart=always
+RestartSec=3
+Environment=USER=vagrant HOME={{ forgejo_install_dir }}
+
+[Install]
+WantedBy=multi-user.target

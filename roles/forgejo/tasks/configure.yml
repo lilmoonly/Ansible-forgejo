@@ -1,0 +1,57 @@
+---
+- name: Ensure Forgejo installation directory exists
+  file:
+    path: "{{ forgejo_install_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Download Forgejo archive
+  get_url:
+    url: "{{ forgejo_download }}"
+    dest: "{{ forgejo_install_dir }}/forgejo.zip"
+    mode: '0644'
+
+- name: Extract Forgejo archive
+  unarchive:
+    src: "{{ forgejo_install_dir }}/forgejo.zip"
+    dest: "{{ forgejo_install_dir }}"
+    remote_src: yes
+
+- name: Configure Forgejo
+  template:
+    src: app.ini.j2
+    dest: "{{ forgejo_install_dir }}/forgejo/custom/conf/app.ini"
+  become: yes
+
+- name: Copy Forgejo systemd service file
+  template:
+    src: forgejo.service.j2
+    dest: /etc/systemd/system/forgejo.service
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Make Gitea executable
+  file:
+    path: "{{ forgejo_install_dir }}/forgejo/gitea"
+    mode: '0755'
+  become: yes
+  notify: 
+    - Reload systemd and start Forgejo
+
+- name: Ensure write permission for the common queue directory
+  file:
+    path: "{{ forgejo_install_dir }}/forgejo/data/queues/common"
+    mode: u+w
+  become: yes
+
+
+- name: Reload systemd and start Forgejo
+  systemd:
+    name: forgejo
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  become: yes
+

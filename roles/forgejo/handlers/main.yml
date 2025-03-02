@@ -1,0 +1,9 @@
+---
+- name: Reload systemd and start Forgejo
+  systemd:
+    name: forgejo
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  become: yes
+

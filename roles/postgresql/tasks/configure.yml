@@ -1,0 +1,53 @@
+---
+- name: Change PostgreSQL local authentication to trust
+  become: yes
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+    contype: local
+    databases: all
+    users: all
+    method: trust
+    state: present
+  notify: Restart PostgreSQL
+
+- name: Remove peer authentication for postgres user
+  become: yes
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+    contype: local
+    databases: all
+    users: postgres
+    method: peer
+    state: absent
+  notify: Restart PostgreSQL
+
+- name: Restart PostgreSQL
+  become: yes
+  service:
+    name: postgresql
+    state: restarted
+
+- name: Configure PostgreSQL to listen on all interfaces
+  become: yes
+  community.postgresql.postgresql_set:
+    name: listen_addresses
+    value: "{{ listen_addresses }}"
+  notify: Restart PostgreSQL
+
+- name: Allow all connections to PostgreSQL from any IP
+  become: yes
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+    contype: host
+    databases: all
+    users: all
+    address: "{{ postgresql_network }}"
+    method: md5
+    state: present
+  notify: Restart PostgreSQL
+
+- name: Restart PostgreSQL
+  become: yes
+  service:
+    name: postgresql
+    state: restarted

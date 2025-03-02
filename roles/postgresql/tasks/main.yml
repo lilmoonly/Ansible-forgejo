@@ -1,0 +1,10 @@
+---
+- name: Install PostgreSQL and dependencies
+  import_tasks: install.yml
+
+- name: Configure PostgreSQL
+  import_tasks: configure.yml
+
+- name: Manage PostgreSQL users and databases
+  import_tasks: users.yml
+

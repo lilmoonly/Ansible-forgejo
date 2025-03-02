@@ -1,0 +1,5 @@
+- name: Remove default Nginx configuration
+  become: yes
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent

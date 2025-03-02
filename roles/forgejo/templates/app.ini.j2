@@ -1,0 +1,34 @@
+[database]
+DB_TYPE  = {{ forgejo_config.database.DB_TYPE }}
+HOST     = {{ forgejo_config.database.HOST }}
+NAME     = {{ forgejo_config.database.NAME }}
+USER     = {{ forgejo_config.database.USER }}
+PASSWD   = {{ forgejo_config.database.PASSWD }}
+SSL_MODE = {{ forgejo_config.database.SSL_MODE }}
+
+[server]
+HTTP_PORT = {{ forgejo_config.server.HTTP_PORT }}
+DOMAIN    = {{ forgejo_config.server.DOMAIN }}
+ROOT_URL  = {{ forgejo_config.server.ROOT_URL }}
+
+[repository]
+ROOT = {{ forgejo_config.repository.ROOT }}
+
+[lfs]
+PATH = {{ forgejo_config.lfs.PATH }}
+
+[security]
+INSTALL_LOCK = {{ forgejo_config.security.INSTALL_LOCK }}
+SECRET_KEY   = {{ forgejo_config.security.SECRET_KEY }}
+
+[service]
+DISABLE_REGISTRATION = {{ forgejo_config.service.DISABLE_REGISTRATION }}
+REGISTER_EMAIL_CONFIRM = {{ forgejo_config.service.REGISTER_EMAIL_CONFIRM }}
+ENABLE_NOTIFY_MAIL = {{ forgejo_config.service.ENABLE_NOTIFY_MAIL }}
+ALLOW_ONLY_EXTERNAL_REGISTRATION = {{ forgejo_config.service.ALLOW_ONLY_EXTERNAL_REGISTRATION }}
+ENABLE_CAPTCHA = {{ forgejo_config.service.ENABLE_CAPTCHA }}
+REQUIRE_SIGNIN_VIEW = {{ forgejo_config.service.REQUIRE_SIGNIN_VIEW }}
+DEFAULT_KEEP_EMAIL_PRIVATE = {{ forgejo_config.service.DEFAULT_KEEP_EMAIL_PRIVATE }}
+DEFAULT_ALLOW_CREATE_ORGANIZATION = {{ forgejo_config.service.DEFAULT_ALLOW_CREATE_ORGANIZATION }}
+DEFAULT_ENABLE_TIMETRACKING = {{ forgejo_config.service.DEFAULT_ENABLE_TIMETRACKING }}
+NO_REPLY_ADDRESS = {{ forgejo_config.service.NO_REPLY_ADDRESS }}

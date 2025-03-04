@@ -1,8 +1,9 @@
 ---
 # default variables for Forgejo installation
 
-forgejo_download: "https://github.com/lilmoonly/Devops-Inteship-Forgejo-Project/releases/download/forgejo-1.0.0/forgejo.zip"
+forgejo_download: "https://github.com/lilmoonly/forgejo/releases/download/v1.0.8/forgejo-release-v1.0.8.tar.gz"
 forgejo_install_dir: "/home/vagrant/forgejo"
+forgejo_archive_install_dir: "/home/vagrant"
 forgejo_archive: "forgejo"
 
 forgejo_config:

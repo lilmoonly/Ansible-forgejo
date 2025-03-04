@@ -5,22 +5,62 @@
     state: directory
     mode: '0755'
 
-- name: Download Forgejo archive
-  get_url:
-    url: "{{ forgejo_download }}"
-    dest: "{{ forgejo_install_dir }}/forgejo.zip"
-    mode: '0644'
+- name: Get latest Forgejo release
+  uri:
+    url: "https://api.github.com/repos/lilmoonly/forgejo/releases/latest"
+    method: GET
+    headers:
+      Authorization: "token {{ github_token }}"
+      User-Agent: "Ansible"
+    return_content: yes
+  register: latest_release
+
+- name: Extract asset ID of latest release
+  set_fact:
+    latest_asset_id: "{{ latest_release.json.assets | selectattr('name', 'search', 'forgejo-release-.*.tar.gz') | map(attribute='id') | first | default('') }}"
+
+- name: Debug latest asset ID
+  debug:
+    msg: "Latest asset ID: {{ latest_asset_id }}"
+
+- name: Fail if no asset ID found
+  fail:
+    msg: "No valid Forgejo release asset found!"
+  when: latest_asset_id == ''
+
+- name: Download latest Forgejo archive via API
+  command: >
+    curl -L -H "Authorization: token {{ github_token }}"
+    -H "Accept: application/octet-stream"
+    -o "{{ forgejo_archive_install_dir }}/forgejo.tar.gz"
+    "https://api.github.com/repos/lilmoonly/forgejo/releases/assets/{{ latest_asset_id }}"
+  args:
+    creates: "{{ forgejo_archive_install_dir }}/forgejo.tar.gz"
 
 - name: Extract Forgejo archive
   unarchive:
-    src: "{{ forgejo_install_dir }}/forgejo.zip"
+    src: "{{ forgejo_archive_install_dir }}/forgejo.tar.gz"
     dest: "{{ forgejo_install_dir }}"
     remote_src: yes
 
 - name: Configure Forgejo
   template:
     src: app.ini.j2
-    dest: "{{ forgejo_install_dir }}/forgejo/custom/conf/app.ini"
+    dest: "{{ forgejo_install_dir }}/custom/conf/app.ini"
+  become: yes
+
+- name: Change ownership of Forgejo directory
+  file:
+    path: "{{ forgejo_install_dir }}"
+    owner: vagrant
+    group: vagrant
+    recurse: yes
+  become: yes
+
+- name: Ensure write permissions for app.ini
+  file:
+    path: "{{ forgejo_install_dir }}/custom/conf/app.ini"
+    mode: "u+w"
   become: yes
 
 - name: Copy Forgejo systemd service file
@@ -34,17 +74,11 @@
 
 - name: Make Gitea executable
   file:
-    path: "{{ forgejo_install_dir }}/forgejo/gitea"
+    path: "{{ forgejo_install_dir }}/gitea"
     mode: '0755'
   become: yes
   notify: 
     - Reload systemd and start Forgejo
-
-- name: Ensure write permission for the common queue directory
-  file:
-    path: "{{ forgejo_install_dir }}/forgejo/data/queues/common"
-    mode: u+w
-  become: yes
 
 
 - name: Reload systemd and start Forgejo
@@ -54,4 +88,6 @@
     state: restarted
     daemon_reload: yes
   become: yes
+
+
 
